@@ -89,7 +89,7 @@ Vedanta_Assistant/
 │   ├── sample_results.md
 │   └── project_report.pdf
 │
-├── .env.example
+|
 ├── .gitignore
 └── README.md
 ```
