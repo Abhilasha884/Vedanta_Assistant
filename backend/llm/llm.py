@@ -256,8 +256,88 @@ Now write the response for the user.
         if not chat_history:
             chat_history = "No previous conversation."
 
-        # Step 1: Domain classification
-        classification = self.classify_question(question)
+        # -----------------------------------------
+        # STEP 1: PREPARE CONTEXTUAL QUERY
+        # -----------------------------------------
+
+        retrieval_query = question
+
+        if history:
+
+            # Find the most recent question asked by the user
+            previous_user_questions = [
+                message["content"]
+                for message in history
+                if message["role"] == "user"
+            ]
+
+            previous_assistant_answers = [
+                message["content"]
+                for message in history
+                if message["role"] == "assistant"
+            ]
+
+            if previous_user_questions and previous_assistant_answers:
+
+                previous_question = previous_user_questions[-1]
+                previous_answer = previous_assistant_answers[-1]
+
+                # Do not inherit context from an out-of-domain response
+                is_previous_answer_in_domain = (
+                    "I'm designed to help with questions related"
+                    not in previous_answer
+                )
+
+                # Identify questions that depend on previous context
+                follow_up_markers = [
+                    "this situation",
+                    "in this situation",
+                    "what should i do",
+                    "what can i do",
+                    "how should i",
+                    "how can i",
+                    "what about",
+                    "why is that",
+                    "explain more",
+                    "tell me more",
+                    "can you elaborate",
+                    "what do you mean",
+                    "in this case",
+                    "this",
+                    "that",
+                    "it",
+                    "these",
+                    "those",
+                    "same",
+                    "apply",
+                    "explain further",
+                    "daily life",
+                    "more about",
+                    "इसका",
+                    "इसे",
+                    "इसको",
+                    "यह",
+                    "इस बारे में"
+                ]
+
+                question_lower = question.lower()
+
+                is_follow_up = any(
+                    marker in question_lower
+                    for marker in follow_up_markers
+                )
+
+                if is_follow_up and is_previous_answer_in_domain:
+
+                    retrieval_query = (
+                        previous_question + "\n" + question
+                    )
+
+        # -----------------------------------------
+        # STEP 2: DOMAIN CLASSIFICATION
+        # -----------------------------------------
+
+        classification = self.classify_question(retrieval_query)
 
         print(f"\nDomain Classification: {classification}")
 
@@ -275,48 +355,10 @@ Now write the response for the user.
                 "retrieved_passages": []
             }
 
-        # Step 2: Prepare contextual retrieval query
+        # -----------------------------------------
+        # STEP 3: RETRIEVE RELEVANT PASSAGES
+        # -----------------------------------------
 
-        retrieval_query = question
-
-        if history:
-
-            # Find the most recent question asked by the user
-            previous_user_questions = [
-                message["content"]
-                for message in history
-                if message["role"] == "user"
-            ]
-
-            if previous_user_questions:
-
-                previous_question = previous_user_questions[-1]
-
-                # Identify questions that depend on previous context
-                follow_up_markers = [
-                    "this", "that", "it", "these", "those",
-                    "same", "apply", "explain further",
-                    "daily life", "more about",
-                    "इसका", "इसे", "इसको", "यह", "इस बारे में"
-                ]
-
-                question_lower = question.lower()
-
-                is_follow_up = (
-                    len(question.split()) <= 8
-                    or any(
-                        marker in question_lower
-                        for marker in follow_up_markers
-                    )
-                )
-
-                if is_follow_up:
-
-                    retrieval_query = (
-                        previous_question + "\n" + question
-                    )
-
-        # Step 3: Retrieve relevant passages from Qdrant
         passages = self.retriever.retrieve(retrieval_query)
 
         if not passages:
@@ -331,7 +373,10 @@ Now write the response for the user.
                 "retrieved_passages": []
             }
 
-        # Step 4: Prepare retrieved passages as context
+        # -----------------------------------------
+        # STEP 4: PREPARE RETRIEVED PASSAGES
+        # -----------------------------------------
+
         context_parts = []
 
         sources = []
@@ -364,7 +409,10 @@ Hindi explanation: {passage.get('hindi_explanation')}
 
         start_time = time.time()
 
-        # Step 5: Generate grounded answer
+        # -----------------------------------------
+        # STEP 5: GENERATE GROUNDED ANSWER
+        # -----------------------------------------
+
         answer = self.chain.invoke({
             "question": question,
             "context": context,
@@ -373,7 +421,10 @@ Hindi explanation: {passage.get('hindi_explanation')}
 
         print(f"LLM generation time: {time.time() - start_time:.2f} seconds")
 
-        # Step 6: Return answer and source metadata
+        # -----------------------------------------
+        # STEP 6: RETURN ANSWER AND SOURCE METADATA
+        # -----------------------------------------
+
         return {
             "answer": answer,
             "sources": sources,

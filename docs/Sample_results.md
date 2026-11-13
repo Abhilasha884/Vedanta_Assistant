@@ -117,4 +117,31 @@ The application retrieves passages related to action, duty, and detachment from 
 
 ---
 
+## Test Case 5: Choosing between Choices
 
+**User Question:**
+
+मैं करियर के दो विकल्पों के बीच उलझन में हूँ। मुझे इस निर्णय को कैसे लेना चाहिए?
+
+**Generated Response:**
+
+Vedanta's Guidance
+मैं समझता हूँ आपको करियर के दो विकल्पों के बीच उलझन में होना कितना मुश्किल लगता है। 
+
+जब आप इस निर्णय को लेने के लिए चिंता कर रहे हैं, तो यह याद रखें कि भावनात्मक विचलन हमें निर्णय लेने से रोक सकता है। भगवद्गीता में एक प्रसंग दिखाता है कि जब अर्जुन अपने रिश्तेदारों को युद्ध में देखता है, तो उसके मन में भय, दुख और भ्रम उत्पन्न होता है। यह दिखाता है कि कठिन स्थितियों में हमारा मन अशांत हो सकता है।
+
+इसी तरह, काथा उपनिषद के अनुसार, समझदार व्यक्ति तत्काल सुख और वास्तविक हित के बीच अंतर पहचानकर सही विकल्प चुनता है। 
+
+इसलिए, आपको करना चाहिए:
+1. दोनों विकल्पों के लिए सवाल पूछें: "कौन सा विकल्प मेरे लिए लंबे समय तक लाभदायक है?"
+2. देखें कि कौन सा विकल्प मेरे आत्मिक और नैतिक विकास के लिए उपयुक्त है।
+
+इस तरह, आप अपने निर्णय को स्वस्थ और विचारपूर्ण ढंग से लेंगे।
+
+**Primary Source:**
+Bhagavad Gita — Reference: V, 1-7 | Page: 68
+Kaṭha Upaniṣad — Reference: II.1-2 | Page: 27
+Bhagavad Gita — Reference: I, 26-35 | Pages: 62–63
+
+**Observation:**
+The application retrieves passages related to selecting between choices maybe realted to career or any decisions which tells user to choose which is helpful ans useful
