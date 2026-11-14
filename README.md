@@ -277,14 +277,6 @@ docs/sample_results.md
 
 The document includes examples of both supported and unsupported questions.
 
-## Configuration
-
-An `.env.example` file is included to document any environment variables required by the project.
-
-Copy it to `.env` if the application requires local environment configuration:
-
-```powershell
-Copy-Item .env.example .env
 ```
 
 Update the values according to your local setup. Do not commit real credentials, private keys, or sensitive configuration values to GitHub.
